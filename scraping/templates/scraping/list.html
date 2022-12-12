@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Program Jobs{% endblock %}
+
+{% block content %}
+{% for obj in object_list %}
+        <div class="card my-3">
+          <h5 class="card-header"><a href="{{ obj.url }}">{{ obj.title }}</a></h5>
+            <div class="card-body">
+                <h4>{{ obj.company }}</h4>
+            <p class="card-text">{{ obj.description }}</p>
+              <p>{{ obj.city.name }} | {{ obj.language.name }} |
+                  <small>{{ obj.timestamp|date:"d-m-Y" }}</small></p>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-md-7 mx-auto">
+            <h3>К сожелению по вашему запросу ничего не найдено!</h3>
+        </div>
+{% endfor %}
+
+{% if object_list %}
+<div class="row">
+    <div class="col">
+        <div class="pagination">
+            <span class="step-links">
+                {% if object_list.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?city={{city}}&language={{language}}&page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}
+                </span>
+
+                {% if object_list.has_next %}
+                    <a href="?city={{city}}&language={{language}}&page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?city={{city}}&language={{language}}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif  %}
+            </span>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <form  action="{% url 'list' %}">
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Найти</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
